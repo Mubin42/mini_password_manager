@@ -13,40 +13,44 @@ def load_key():
     return key
 
 master_pwd = input("Input Master Password: ")
-key = load_key() + master_pwd.encode()
-fer = Fernet(key)
+if master_pwd != "masterpassword":
+    print("Wrong Master Password")
+else:
 
-def view():
+    key = load_key() + master_pwd.encode()
+    fer = Fernet(key)
 
-    with open('password.txt', 'r') as f:
-        for line in f.readlines():
-            data = (line.rstrip())
-            user, mail , passw = data.split("|")
-            print("User: ", user,"\nMail: ",
-                  fer.decrypt(mail.encode()).decode(), "\nPassword: ",
-                  fer.decrypt(passw.encode()).decode(),"\n\n")
+    def view():
 
-def add():
-    name = input("Account Name : ")
-    mail = input("Mail ID: ")
-    pwd = input("Password : ")
-    with open('password.txt', 'a') as f: #w=override, r=readmode, a=append
-        f.write(name + " | " + fer.encrypt(mail.encode()).decode() + " | " +
-                fer.encrypt(pwd.encode()).decode() + "\n")
+        with open('password.txt', 'r') as f:
+            for line in f.readlines():
+                data = (line.rstrip())
+                user, mail , passw = data.split("|")
+                print("User: ", user,"\nMail: ",
+                      fer.decrypt(mail.encode()).decode(), "\nPass: ",
+                      fer.decrypt(passw.encode()).decode(),"\n-------------------------")
 
-while True:
-    mode = input("Press 'add' command to add password \n"
-                 "Press 'view' command to view password \n"
-                 "press 'q' command to exit \n"
-                 "Command: ")
-    if mode == "q":
-        break
+    def add():
+        name = input("Account Name : ")
+        mail = input("Mail ID: ")
+        pwd = input("Password : ")
+        with open('password.txt', 'a') as f: #w=override, r=readmode, a=append
+            f.write(name + " | " + fer.encrypt(mail.encode()).decode() + " | " +
+                    fer.encrypt(pwd.encode()).decode() + "\n")
 
-    if mode == "view":
-        view()
-    elif mode == "add":
-        add()
-    else:
-        print("Invalid Mode")
-        continue
+    while True:
+        mode = input("Press 'add' command to add password \n"
+                     "Press 'view' command to view password \n"
+                     "press 'q' command to exit \n"
+                     "Command: ")
+        if mode == "q":
+            break
+
+        if mode == "view":
+            view()
+        elif mode == "add":
+            add()
+        else:
+            print("Invalid Mode")
+            continue
 
